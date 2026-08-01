@@ -13,12 +13,12 @@ public class RelationshipWrapper : BaseWrapper<IRelationship>, IRelationship
 
     public T Get<T>(string key)
     {
-        throw new System.NotImplementedException();
+        return WrappedItem.Get<T>(key);
     }
 
     public bool TryGet<T>(string key, out T value)
     {
-        throw new System.NotImplementedException();
+        return WrappedItem.TryGet(key, out value);
     }
 
     public object this[string key] => Properties[key];

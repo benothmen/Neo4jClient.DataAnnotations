@@ -155,6 +155,78 @@ Now, you can proceed to attach the new context class to your `IGraphClient` inst
 	
         //or simply, services.AddNeo4jAnnotations(), for the default context instance.
     }
+
+### Cypher functions
+----------
+
+Modern scalar, conversion, list, identity, and spatial functions can be used in annotated expressions:
+
+    var query = context.Cypher.With((ActorNode actor) => new
+    {
+        Id = CypherFunctions.ElementId(actor),
+        Type = CypherFunctions.ValueType(actor),
+        Born = CypherFunctions.ToIntegerOrNull(actor.Name),
+        EmptyRoles = CypherFunctions.IsEmpty(actor.Roles)
+    });
+
+For newer built-in functions, namespaced functions, or user-defined functions, use the validated generic call API:
+
+    var query = context.Cypher.With((ActorNode actor) => new
+    {
+        Score = CypherFunctions.Call<double>(
+            "vector.similarity.cosine",
+            CypherVariables.Get<List<double>>("firstEmbedding"),
+            CypherVariables.Get<List<double>>("secondEmbedding"))
+    });
+
+Function names must be constant dotted identifiers; arbitrary Cypher fragments are rejected.
+
+### Driver executable queries
+----------
+
+Connected Bolt contexts expose the annotation-aware Neo4j driver through `context.Driver`, including the driver's simplified executable-query API. The context shortcut keeps record mapping, filtering, reduction, stream processing, cancellation, configuration, and parameters in the driver pipeline:
+
+    var result = await context
+        .ExecutableQuery("MATCH p = (person:Person)-[role]->(movie) " +
+                         "WHERE person.name = $name RETURN person, role, p")
+        .WithParameters(new
+        {
+            name = "Alice",
+            options = new { includeArchived = false }
+        })
+        .ExecuteAsync(cancellationToken);
+
+Returned records wrap nodes, relationships, and every entity inside `IPath` values with annotation metadata. Parameter normalization is recursive, so nested `JObject`, `JArray`, dictionaries, and collections can be passed to sessions, transactions, and executable queries.
+
+### Transactions
+----------
+
+Connected Bolt contexts expose managed read/write transactions. Each operation gets its own session, and the driver may retry a managed callback when a transient error occurs:
+
+    var context = (AppContext)graphClient.GetAnnotationsContext();
+
+    await context.Transactions.ExecuteWriteAsync(async transaction =>
+    {
+        var query = context.Cypher
+            .Create(path => path.Pattern<ActorNode>("actor").Prop(() => actor));
+
+        await transaction.RunAsync(query);
+    });
+
+Explicit transactions provide commit and rollback control and own their session:
+
+    await using var transaction = await context.Transactions.BeginTransactionAsync();
+    try
+    {
+        await transaction.RunAsync("CREATE (n:Audit { message: $message })",
+            new { message = "completed" });
+        await transaction.CommitAsync();
+    }
+    catch
+    {
+        await transaction.RollbackAsync();
+        throw;
+    }
     
 ----------
 ... and we're done.

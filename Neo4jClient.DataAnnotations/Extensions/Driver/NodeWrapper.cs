@@ -14,12 +14,12 @@ public class NodeWrapper : BaseWrapper<INode>, INode
 
     public T Get<T>(string key)
     {
-        throw new NotImplementedException();
+        return WrappedItem.Get<T>(key);
     }
 
     public bool TryGet<T>(string key, out T value)
     {
-        throw new NotImplementedException();
+        return WrappedItem.TryGet(key, out value);
     }
 
     public object this[string key] => Properties[key];

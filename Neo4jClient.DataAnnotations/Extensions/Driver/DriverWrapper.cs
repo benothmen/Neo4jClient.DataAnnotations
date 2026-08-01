@@ -52,7 +52,7 @@ namespace Neo4jClient.DataAnnotations.Extensions.Driver
 
         public IExecutableQuery<IRecord, IRecord> ExecutableQuery(string cypher)
         {
-            return WrappedItem.ExecutableQuery(cypher);
+            return new ExecutableQueryWrapper(WrappedItem.ExecutableQuery(cypher));
         }
 
         public Task<bool> VerifyAuthenticationAsync(IAuthToken authToken)

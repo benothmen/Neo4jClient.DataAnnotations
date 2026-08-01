@@ -212,6 +212,54 @@ namespace Neo4jClient.DataAnnotations.Expressions
                     Utils.Utilities.GetMethodInfo(() => CypherFunctions.EndNode<object>(null)),
                     c => FunctionHandlers.FuncsMethod(c, "EndNode", "endNode")
                 },
+                {
+                    Utils.Utilities.GetMethodInfo(() => CypherFunctions.ElementId<object>(null)),
+                    c => FunctionHandlers.FuncsMethod(c, "ElementId", "elementId")
+                },
+                {
+                    Utils.Utilities.GetMethodInfo(() => CypherFunctions.ValueType<object>(null)),
+                    c => FunctionHandlers.FuncsMethod(c, "ValueType", "valueType")
+                },
+                {
+                    Utils.Utilities.GetMethodInfo(() => CypherFunctions.RandomUuid()),
+                    c => FunctionHandlers.FuncsMethod(c, "RandomUuid", "randomUUID")
+                },
+                {
+                    Utils.Utilities.GetMethodInfo(() => CypherFunctions.ToBoolean<object>(null)),
+                    c => FunctionHandlers.FuncsMethod(c, "ToBoolean", "toBoolean")
+                },
+                {
+                    Utils.Utilities.GetMethodInfo(() => CypherFunctions.ToBooleanOrNull<object>(null)),
+                    c => FunctionHandlers.FuncsMethod(c, "ToBooleanOrNull", "toBooleanOrNull")
+                },
+                {
+                    Utils.Utilities.GetMethodInfo(() => CypherFunctions.ToFloat<object>(null)),
+                    c => FunctionHandlers.FuncsMethod(c, "ToFloat", "toFloat")
+                },
+                {
+                    Utils.Utilities.GetMethodInfo(() => CypherFunctions.ToFloatOrNull<object>(null)),
+                    c => FunctionHandlers.FuncsMethod(c, "ToFloatOrNull", "toFloatOrNull")
+                },
+                {
+                    Utils.Utilities.GetMethodInfo(() => CypherFunctions.ToInteger<object>(null)),
+                    c => FunctionHandlers.FuncsMethod(c, "ToInteger", "toInteger")
+                },
+                {
+                    Utils.Utilities.GetMethodInfo(() => CypherFunctions.ToIntegerOrNull<object>(null)),
+                    c => FunctionHandlers.FuncsMethod(c, "ToIntegerOrNull", "toIntegerOrNull")
+                },
+                {
+                    Utils.Utilities.GetMethodInfo(() => CypherFunctions.ToString<object>(null)),
+                    c => FunctionHandlers.FuncsMethod(c, "ToString", "toString")
+                },
+                {
+                    Utils.Utilities.GetMethodInfo(() => CypherFunctions.ToStringOrNull<object>(null)),
+                    c => FunctionHandlers.FuncsMethod(c, "ToStringOrNull", "toStringOrNull")
+                },
+                {
+                    Utils.Utilities.GetMethodInfo(() => CypherFunctions.Call<object>(null)),
+                    FunctionHandlers.CypherFunctionCall
+                },
 
                 #endregion
 
@@ -260,6 +308,34 @@ namespace Neo4jClient.DataAnnotations.Expressions
                 {
                     Utils.Utilities.GetMethodInfo(() => CypherFunctions.Tail<object>(null)),
                     c => FunctionHandlers.FuncsMethod(c, "Tail", "tail")
+                },
+                {
+                    Utils.Utilities.GetMethodInfo(() => CypherFunctions.Head<object>(null)),
+                    c => FunctionHandlers.FuncsMethod(c, "Head", "head")
+                },
+                {
+                    Utils.Utilities.GetMethodInfo(() => CypherFunctions.Last<object>(null)),
+                    c => FunctionHandlers.FuncsMethod(c, "Last", "last")
+                },
+                {
+                    Utils.Utilities.GetMethodInfo(() => CypherFunctions.IsEmpty<object>(null)),
+                    c => FunctionHandlers.FuncsMethod(c, "IsEmpty", "isEmpty")
+                },
+                {
+                    Utils.Utilities.GetMethodInfo(() => CypherFunctions.ToBooleanList<object>(null)),
+                    c => FunctionHandlers.FuncsMethod(c, "ToBooleanList", "toBooleanList")
+                },
+                {
+                    Utils.Utilities.GetMethodInfo(() => CypherFunctions.ToFloatList<object>(null)),
+                    c => FunctionHandlers.FuncsMethod(c, "ToFloatList", "toFloatList")
+                },
+                {
+                    Utils.Utilities.GetMethodInfo(() => CypherFunctions.ToIntegerList<object>(null)),
+                    c => FunctionHandlers.FuncsMethod(c, "ToIntegerList", "toIntegerList")
+                },
+                {
+                    Utils.Utilities.GetMethodInfo(() => CypherFunctions.ToStringList<object>(null)),
+                    c => FunctionHandlers.FuncsMethod(c, "ToStringList", "toStringList")
                 },
 
                 #endregion
@@ -440,6 +516,20 @@ namespace Neo4jClient.DataAnnotations.Expressions
                 #endregion
 
                 #region Spatial Functions
+
+                {
+                    Utils.Utilities.GetMethodInfo(() => CypherFunctions.Point<object>(null)),
+                    c => FunctionHandlers.FuncsMethod(c, "Point", "point")
+                },
+                {
+                    Utils.Utilities.GetMethodInfo(() => CypherFunctions.Distance<object, object>(null, null)),
+                    c => FunctionHandlers.FuncsMethod(c, "Distance", "point.distance")
+                },
+                {
+                    Utils.Utilities.GetMethodInfo(() =>
+                        CypherFunctions.PointWithinBoundingBox<object, object, object>(null, null, null)),
+                    c => FunctionHandlers.FuncsMethod(c, "PointWithinBoundingBox", "point.withinBBox")
+                },
 
                 #endregion
             };

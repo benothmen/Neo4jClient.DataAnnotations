@@ -496,5 +496,129 @@ namespace Neo4jClient.DataAnnotations //.Cypher
         {
             throw new NotImplementedException(Messages.FunctionsInvokeError);
         }
+
+        /// <summary>Returns the transaction-scoped element identifier of a node or relationship.</summary>
+        public static string ElementId<TSource>(TSource source)
+        {
+            throw new NotImplementedException(Messages.FunctionsInvokeError);
+        }
+
+        /// <summary>Returns the most precise Cypher type name for a value.</summary>
+        public static string ValueType<TSource>(TSource source)
+        {
+            throw new NotImplementedException(Messages.FunctionsInvokeError);
+        }
+
+        /// <summary>Returns a random UUID string.</summary>
+        public static string RandomUuid()
+        {
+            throw new NotImplementedException(Messages.FunctionsInvokeError);
+        }
+
+        /// <summary>Returns the first item in a list.</summary>
+        public static TSource Head<TSource>(IEnumerable<TSource> source)
+        {
+            throw new NotImplementedException(Messages.FunctionsInvokeError);
+        }
+
+        /// <summary>Returns the last item in a list.</summary>
+        public static TSource Last<TSource>(IEnumerable<TSource> source)
+        {
+            throw new NotImplementedException(Messages.FunctionsInvokeError);
+        }
+
+        /// <summary>Tests whether a list, map, or string is empty.</summary>
+        public static bool IsEmpty<TSource>(TSource source)
+        {
+            throw new NotImplementedException(Messages.FunctionsInvokeError);
+        }
+
+        public static bool ToBoolean<TSource>(TSource source)
+        {
+            throw new NotImplementedException(Messages.FunctionsInvokeError);
+        }
+
+        public static bool? ToBooleanOrNull<TSource>(TSource source)
+        {
+            throw new NotImplementedException(Messages.FunctionsInvokeError);
+        }
+
+        public static double ToFloat<TSource>(TSource source)
+        {
+            throw new NotImplementedException(Messages.FunctionsInvokeError);
+        }
+
+        public static double? ToFloatOrNull<TSource>(TSource source)
+        {
+            throw new NotImplementedException(Messages.FunctionsInvokeError);
+        }
+
+        public static long ToInteger<TSource>(TSource source)
+        {
+            throw new NotImplementedException(Messages.FunctionsInvokeError);
+        }
+
+        public static long? ToIntegerOrNull<TSource>(TSource source)
+        {
+            throw new NotImplementedException(Messages.FunctionsInvokeError);
+        }
+
+        public static string ToString<TSource>(TSource source)
+        {
+            throw new NotImplementedException(Messages.FunctionsInvokeError);
+        }
+
+        public static string ToStringOrNull<TSource>(TSource source)
+        {
+            throw new NotImplementedException(Messages.FunctionsInvokeError);
+        }
+
+        public static List<bool?> ToBooleanList<TSource>(TSource source)
+        {
+            throw new NotImplementedException(Messages.FunctionsInvokeError);
+        }
+
+        public static List<double?> ToFloatList<TSource>(TSource source)
+        {
+            throw new NotImplementedException(Messages.FunctionsInvokeError);
+        }
+
+        public static List<long?> ToIntegerList<TSource>(TSource source)
+        {
+            throw new NotImplementedException(Messages.FunctionsInvokeError);
+        }
+
+        public static List<string> ToStringList<TSource>(TSource source)
+        {
+            throw new NotImplementedException(Messages.FunctionsInvokeError);
+        }
+
+        /// <summary>Creates a Neo4j point from a map-like value.</summary>
+        public static object Point<TSource>(TSource source)
+        {
+            throw new NotImplementedException(Messages.FunctionsInvokeError);
+        }
+
+        /// <summary>Returns the geodesic distance between two points.</summary>
+        public static double Distance<TStart, TEnd>(TStart start, TEnd end)
+        {
+            throw new NotImplementedException(Messages.FunctionsInvokeError);
+        }
+
+        /// <summary>Tests whether a point is within the supplied bounding box.</summary>
+        public static bool PointWithinBoundingBox<TPoint, TLowerLeft, TUpperRight>(
+            TPoint point, TLowerLeft lowerLeft, TUpperRight upperRight)
+        {
+            throw new NotImplementedException(Messages.FunctionsInvokeError);
+        }
+
+        /// <summary>
+        /// Calls a built-in or user-defined Cypher function. The function name must be a constant dotted identifier.
+        /// This provides forward-compatible access to temporal, vector, database, and custom functions.
+        /// </summary>
+        public static TResult Call<TResult>(string functionName, params object[] arguments)
+        {
+            throw new NotImplementedException(Messages.FunctionsInvokeError);
+        }
     }
 }

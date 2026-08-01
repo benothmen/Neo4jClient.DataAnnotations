@@ -50,7 +50,7 @@ namespace Neo4jClient.DataAnnotations.Tests
 
             Assert.Empty(entityVisitor.PendingAssignments);
 
-            dynamic result = newExpression.ExecuteExpression<Dictionary<string, object>>();
+            var result = newExpression.ExecuteExpression<Dictionary<string, object>>();
             Assert.NotNull(result);
 
             var tokensExpected = new Dictionary<string, object>
@@ -276,7 +276,7 @@ namespace Neo4jClient.DataAnnotations.Tests
             Assert.Equal(2, entityVisitor.PredicateAssignments.Count);
             Assert.Equal(6, entityVisitor.PendingAssignments.Count);
 
-            dynamic result = newExpression.ExecuteExpression<Dictionary<string, object>>();
+            var result = newExpression.ExecuteExpression<Dictionary<string, object>>();
             Assert.NotNull(result);
 
             var tokensExpected = new Dictionary<string, object>
@@ -328,7 +328,7 @@ namespace Neo4jClient.DataAnnotations.Tests
             Assert.Equal("NewAddressName_Location_Longitude",
                 entityVisitor.PendingAssignments.First().Key.ComplexJsonName);
 
-            dynamic result = newExpression.ExecuteExpression<Dictionary<string, object>>();
+            var result = newExpression.ExecuteExpression<Dictionary<string, object>>();
             Assert.NotNull(result);
 
             var tokensExpected = new Dictionary<string, object>
@@ -366,7 +366,7 @@ namespace Neo4jClient.DataAnnotations.Tests
             Assert.Contains("Get(\"ellenPompeo\").Address.AddressLine",
                 entityVisitor.PendingAssignments.First().Value.ToString());
 
-            dynamic result = newExpression.ExecuteExpression<Dictionary<string, object>>();
+            var result = newExpression.ExecuteExpression<Dictionary<string, object>>();
             Assert.NotNull(result);
 
             var tokensExpected = new Dictionary<string, object>

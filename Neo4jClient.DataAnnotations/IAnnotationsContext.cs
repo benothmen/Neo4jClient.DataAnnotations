@@ -1,5 +1,7 @@
 ﻿using Neo4jClient.Cypher;
 using Neo4jClient.DataAnnotations.Serialization;
+using Neo4jClient.DataAnnotations.Transactions;
+using Neo4j.Driver;
 
 namespace Neo4jClient.DataAnnotations
 {
@@ -12,5 +14,7 @@ namespace Neo4jClient.DataAnnotations
         EntityConverter EntityConverter { get; }
         ICypherFluentQuery Cypher { get; }
         bool IsBoltClient { get; }
+        IDriver Driver { get; }
+        AnnotationsTransactionManager Transactions { get; }
     }
 }
