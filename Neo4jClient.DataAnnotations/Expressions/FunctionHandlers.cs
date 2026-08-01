@@ -1153,6 +1153,48 @@ namespace Neo4jClient.DataAnnotations.Expressions
             return null;
         }
 
+        public static Func<Expression> CypherFunctionCall(FunctionHandlerContext context)
+        {
+            if (!IsFuncsMethod(context, "Call", out var methodCallExpr, out _))
+                return null;
+
+            return () =>
+            {
+                if (methodCallExpr.Arguments[0] is not ConstantExpression nameExpression
+                    || nameExpression.Value is not string functionName
+                    || !IsValidCypherFunctionName(functionName))
+                    throw new InvalidOperationException(
+                        "Cypher function names must be constant dotted identifiers.");
+
+                context.Visitor.Builder.Append($"{functionName}(", context.Expression);
+
+                IReadOnlyList<Expression> arguments = methodCallExpr.Arguments[1] is NewArrayExpression arrayExpression
+                    ? arrayExpression.Expressions
+                    : new[] { methodCallExpr.Arguments[1] };
+
+                for (var index = 0; index < arguments.Count; index++)
+                {
+                    if (index > 0)
+                        context.Visitor.Builder.Append(", ", context.Expression);
+                    context.Visitor.WriteArgument(arguments[index], context.Expression);
+                }
+
+                context.Visitor.Builder.Append(")", context.Expression);
+                return methodCallExpr;
+            };
+        }
+
+        private static bool IsValidCypherFunctionName(string functionName)
+        {
+            if (string.IsNullOrWhiteSpace(functionName))
+                return false;
+
+            return functionName.Split('.').All(part =>
+                part.Length > 0
+                && (char.IsLetter(part[0]) || part[0] == '_')
+                && part.Skip(1).All(character => char.IsLetterOrDigit(character) || character == '_'));
+        }
+
         /// <summary>
         ///     Writes the <code>coalesce</code> neo4j scalar function.
         /// </summary>

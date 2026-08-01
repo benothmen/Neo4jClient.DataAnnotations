@@ -41,9 +41,10 @@ namespace Neo4jClient.DataAnnotations.Extensions.Driver
             return record;
         }
 
-        public IAsyncEnumerator<IRecord> GetAsyncEnumerator(CancellationToken cancellationToken = new CancellationToken())
+        public async IAsyncEnumerator<IRecord> GetAsyncEnumerator(CancellationToken cancellationToken = default)
         {
-            return WrappedItem.GetAsyncEnumerator(cancellationToken);
+            await foreach (var record in WrappedItem.WithCancellation(cancellationToken))
+                yield return GetRecord(record);
         }
     }
 }

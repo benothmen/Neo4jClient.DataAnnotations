@@ -6,6 +6,7 @@ using Neo4j.Driver;
 using Neo4jClient.Cypher;
 using Neo4jClient.DataAnnotations.Extensions.Driver;
 using Neo4jClient.DataAnnotations.Serialization;
+using Neo4jClient.DataAnnotations.Transactions;
 using Neo4jClient.DataAnnotations.Utils;
 using Newtonsoft.Json;
 
@@ -115,6 +116,30 @@ namespace Neo4jClient.DataAnnotations
         public ICypherFluentQuery Cypher => GraphClient?.Cypher;
 
         public bool IsBoltClient => GraphClient is IBoltGraphClient;
+
+        /// <summary>
+        ///     The annotation-aware Neo4j driver. Available for connected Bolt clients.
+        /// </summary>
+        public IDriver Driver { get; private set; }
+
+        /// <summary>
+        ///     Annotation-aware managed and explicit transactions. Available for connected Bolt clients.
+        /// </summary>
+        public AnnotationsTransactionManager Transactions { get; private set; }
+
+        /// <summary>
+        ///     Creates a driver-level executable query whose records, nodes, relationships, and paths
+        ///     remain annotation-aware.
+        /// </summary>
+        public IExecutableQuery<IRecord, IRecord> ExecutableQuery(string cypher)
+        {
+            if (string.IsNullOrWhiteSpace(cypher))
+                throw new ArgumentException("Cypher query text cannot be empty.", nameof(cypher));
+            if (Driver == null)
+                throw new InvalidOperationException(Messages.ClientHasNoDriverError);
+
+            return Driver.ExecutableQuery(cypher);
+        }
 
         protected void Init()
         {
@@ -238,7 +263,9 @@ namespace Neo4jClient.DataAnnotations
                     throw new InvalidOperationException(Messages.ClientHasNoDriverError);
 
                 //now wrap the driver with our wrappers
-                driver = new DriverWrapper(driver);
+                driver = driver is DriverWrapper ? driver : new DriverWrapper(driver);
+                context.Driver = driver;
+                context.Transactions = new AnnotationsTransactionManager(driver);
 
                 try
                 {

@@ -18,27 +18,27 @@ namespace Neo4jClient.DataAnnotations.Extensions.Driver
 
         public async Task<IResultCursor> RunAsync(string query, object parameters)
         {
-            return GetResultCursor(await WrappedItem.RunAsync(query, parameters));
+            return await RunAsync(new Query(query, parameters));
         }
 
         public async Task<IResultCursor> RunAsync(string query, IDictionary<string, object> parameters)
         {
-            return GetResultCursor(await WrappedItem.RunAsync(query, parameters));
+            return await RunAsync(new Query(query, parameters));
         }
 
         public async Task<IResultCursor> RunAsync(Query query)
         {
-            return GetResultCursor(await WrappedItem.RunAsync(query));
+            return GetResultCursor(await WrappedItem.RunAsync(AsyncQueryRunnerWrapper.NormalizeQuery(query)));
         }
 
-        public Task<IAsyncTransaction> BeginTransactionAsync()
+        public async Task<IAsyncTransaction> BeginTransactionAsync()
         {
-            return WrappedItem.BeginTransactionAsync();
+            return GetAsyncTransaction(await WrappedItem.BeginTransactionAsync());
         }
 
-        public Task<IAsyncTransaction> BeginTransactionAsync(Action<TransactionConfigBuilder> action)
+        public async Task<IAsyncTransaction> BeginTransactionAsync(Action<TransactionConfigBuilder> action)
         {
-            return WrappedItem.BeginTransactionAsync(action);
+            return GetAsyncTransaction(await WrappedItem.BeginTransactionAsync(action));
         }
 
         public Task<T> ReadTransactionAsync<T>(Func<IAsyncTransaction, Task<T>> work)
@@ -85,22 +85,22 @@ namespace Neo4jClient.DataAnnotations.Extensions.Driver
 
         public Task<TResult> ExecuteReadAsync<TResult>(Func<IAsyncQueryRunner, Task<TResult>> work, Action<TransactionConfigBuilder> action = null)
         {
-            return WrappedItem.ExecuteReadAsync(work, action);
+            return WrappedItem.ExecuteReadAsync(runner => work(GetAsyncQueryRunner(runner)), action);
         }
 
         public Task ExecuteReadAsync(Func<IAsyncQueryRunner, Task> work, Action<TransactionConfigBuilder> action = null)
         {
-            return WrappedItem.ExecuteReadAsync(work, action);
+            return WrappedItem.ExecuteReadAsync(runner => work(GetAsyncQueryRunner(runner)), action);
         }
 
         public Task<TResult> ExecuteWriteAsync<TResult>(Func<IAsyncQueryRunner, Task<TResult>> work, Action<TransactionConfigBuilder> action = null)
         {
-            return WrappedItem.ExecuteWriteAsync(work, action);
+            return WrappedItem.ExecuteWriteAsync(runner => work(GetAsyncQueryRunner(runner)), action);
         }
 
         public Task ExecuteWriteAsync(Func<IAsyncQueryRunner, Task> work, Action<TransactionConfigBuilder> action = null)
         {
-            return WrappedItem.ExecuteWriteAsync(work, action);
+            return WrappedItem.ExecuteWriteAsync(runner => work(GetAsyncQueryRunner(runner)), action);
         }
 
         public Task CloseAsync()
@@ -116,12 +116,13 @@ namespace Neo4jClient.DataAnnotations.Extensions.Driver
         public async Task<IResultCursor> RunAsync(string query, IDictionary<string, object> parameters,
             Action<TransactionConfigBuilder> action)
         {
-            return GetResultCursor(await WrappedItem.RunAsync(query, parameters, action));
+            return await RunAsync(new Query(query, parameters), action);
         }
 
         public async Task<IResultCursor> RunAsync(Query query, Action<TransactionConfigBuilder> action)
         {
-            return GetResultCursor(await WrappedItem.RunAsync(query, action));
+            return GetResultCursor(
+                await WrappedItem.RunAsync(AsyncQueryRunnerWrapper.NormalizeQuery(query), action));
         }
 
         public Bookmark LastBookmark => WrappedItem.LastBookmark;
@@ -143,6 +144,17 @@ namespace Neo4jClient.DataAnnotations.Extensions.Driver
                 return new AsyncTransactionWrapper(transaction);
 
             return transaction;
+        }
+
+        protected internal static IAsyncQueryRunner GetAsyncQueryRunner(IAsyncQueryRunner queryRunner)
+        {
+            if (queryRunner is IAsyncTransaction transaction)
+                return GetAsyncTransaction(transaction);
+
+            if (queryRunner != null && queryRunner is not AsyncQueryRunnerWrapper)
+                return new AsyncQueryRunnerWrapper(queryRunner);
+
+            return queryRunner;
         }
 
         public ValueTask DisposeAsync()
